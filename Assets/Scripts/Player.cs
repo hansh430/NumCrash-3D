@@ -54,6 +54,7 @@ public class Player : MonoBehaviour
 
     private void OnPointerDown()
     {
+        SoundManager.Instance.PlaySfx(AudioClipType.CLICK);
         isPointerDown = true;
     }
     private void SpawnNewCube()

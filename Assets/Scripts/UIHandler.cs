@@ -11,7 +11,10 @@ public class UIHandler : MonoBehaviour
     [SerializeField] private Button restartButton;
     [SerializeField] private TMP_Text scoreText;
     [SerializeField] private TMP_Text highScoreText;
+    [SerializeField] private Toggle soundToggle;
+
     private int currentScore = 0;
+    private int currentHighScore = 0;
     private void OnEnable()
     {
         restartButton.onClick.AddListener(GameRestart);
@@ -20,8 +23,10 @@ public class UIHandler : MonoBehaviour
     }
     private void Start()
     {
-        int savedHighScore = PlayerPrefs.GetInt("HighScore", 0);
-        highScoreText.text = savedHighScore.ToString();
+        currentHighScore = PlayerPrefs.GetInt("HighScore", 0);
+        highScoreText.text = currentHighScore.ToString();
+        bool isSoundOn = PlayerPrefs.GetInt("Sound", 1) == 1;
+        soundToggle.isOn = isSoundOn;
     }
     private void GameOver()
     {
@@ -32,11 +37,17 @@ public class UIHandler : MonoBehaviour
     {
         currentScore = score;
         scoreText.text = score.ToString();
+        if(currentScore>currentHighScore)
+        {
+            currentHighScore=currentScore;
+            PlayerPrefs.SetInt("HighScore", currentHighScore);
+            PlayerPrefs.Save();
+        }
     }
     private void UpdateHighScore()
     {
-        int savedHighScore = PlayerPrefs.GetInt("HighScore", 0);
-        if (currentScore > savedHighScore)
+        currentHighScore = PlayerPrefs.GetInt("HighScore", 0);
+        if (currentScore > currentHighScore)
         {
             PlayerPrefs.SetInt("HighScore", currentScore);
             PlayerPrefs.Save();
@@ -44,7 +55,7 @@ public class UIHandler : MonoBehaviour
         }
         else
         {
-            highScoreText.text = savedHighScore.ToString();
+            highScoreText.text = currentHighScore.ToString();
         }
     }
     private void GameRestart()

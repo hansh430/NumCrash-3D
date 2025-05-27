@@ -38,6 +38,7 @@ public class CubeCollision : MonoBehaviour
                         col.attachedRigidbody.AddExplosionForce(explosionForce, contactPoint, explosionRadius);
                 }
                 FX.Instance.PlayCubeExplosionFX(contactPoint, cube.CubeColor);
+                SoundManager.Instance.PlaySfx(AudioClipType.COLLECT);
                 ScoreManager.Instance.UpdateScore(1);
                 CubeSpawner.Instance.DestroyCube(cube);
                 CubeSpawner.Instance.DestroyCube(otherCube);

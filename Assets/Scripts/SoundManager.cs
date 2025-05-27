@@ -7,8 +7,10 @@ using UnityEngine.UI;
 public class SoundManager : MonoBehaviour
 {
     public static SoundManager Instance;
-    [SerializeField] private Toggle soundToggle;
     [SerializeField] private AudioSource bgMusicSource;
+    [SerializeField] private AudioSource sfxAudioSource;
+    [SerializeField] private AudioClip clickSfx;
+    [SerializeField] private AudioClip collectSfx;
     private void Awake()
     {
         Instance = this;
@@ -16,11 +18,22 @@ public class SoundManager : MonoBehaviour
     private void Start()
     {
         bool isSoundOn = PlayerPrefs.GetInt("Sound", 1) == 1;
-        soundToggle.isOn = isSoundOn;
         SetSoundState(isSoundOn);
-
     }
-
+    public void PlaySfx(AudioClipType audioClipType)
+    {
+        AudioClip audioClip=null;
+        switch (audioClipType)
+        {
+            case AudioClipType.CLICK:
+                audioClip = clickSfx;
+                break;
+            case AudioClipType.COLLECT:
+                audioClip = collectSfx;
+                break;
+        }
+        sfxAudioSource.PlayOneShot(audioClip);
+    }
     public void SetSoundState(bool isOn)
     {
         AudioListener.volume = isOn ? 1f : 0f;
@@ -34,4 +47,9 @@ public class SoundManager : MonoBehaviour
         PlayerPrefs.Save();
 
     }
+}
+public enum AudioClipType
+{
+    CLICK,
+    COLLECT
 }
